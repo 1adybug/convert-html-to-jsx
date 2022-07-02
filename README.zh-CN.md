@@ -13,9 +13,9 @@
 ## 安装
 
 ```shell
-yarn add html-to-jsx
+yarn add convert-html-to-jsx
 # 或者
-npm i html-to-jsx
+npm i convert-html-to-jsx
 ```
 
 ## 使用

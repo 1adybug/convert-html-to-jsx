@@ -13,9 +13,9 @@ Due to the use of `RegExpMatchArray.groups`, the target version of `JavaScript` 
 ## Installation
 
 ```shell
-yarn add html-to-jsx
+yarn add convert-html-to-jsx
 # or
-npm i html-to-jsx
+npm i convert-html-to-jsx
 ```
 
 ## Usage
