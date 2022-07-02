@@ -95,7 +95,7 @@ type Convert = (props: ConvertProps) => JSX.Element
 1. 把所有的 `button` 标签都禁用
 
     ```typescript
-    const convert = (props: TransformProps) => {
+    const convert = (props: ConvertProps) => {
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
         if (tagName === "button") {
 
@@ -120,7 +120,7 @@ type Convert = (props: ConvertProps) => JSX.Element
 2. 把 `id` 为 `abc` 的标签，字体进行加粗
 
     ```typescript
-    const convert = (props: TransformProps) => {
+    const convert = (props: ConvertProps) => {
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
         if (HTMLProps.id === "abc") {
             if (HTMLProps.style) {
@@ -143,7 +143,7 @@ type Convert = (props: ConvertProps) => JSX.Element
     ```typescript
     import { Image } from "antd"
 
-    const convert = (props: TransformProps) => {
+    const convert = (props: ConvertProps) => {
 
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
 
@@ -168,7 +168,7 @@ type Convert = (props: ConvertProps) => JSX.Element
     ```typescript
     import { Text } from "react-native"
 
-    const convert = (props: TransformProps) => {
+    const convert = (props: ConvertProps) => {
 
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
 
