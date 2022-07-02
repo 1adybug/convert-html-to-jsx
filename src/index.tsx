@@ -1,12 +1,12 @@
 import React, { createElement, Fragment, ReactNode } from "react"
 
-interface HTML2JSXProps {
+export interface HTML2JSXProps {
     innerHTML: string,
     convert?: Convert,
     enableScript?: boolean
 }
 
-function getPropName(str: string) {
+export function getPropName(str: string) {
     str = str.trim()
     if (str === "class") {
         return "className"
@@ -20,15 +20,15 @@ function getPropName(str: string) {
     return undefined
 }
 
-interface HTMLProps {
+export interface HTMLProps {
     [PropName: string]: string | boolean | Style
 }
 
-interface EventProps {
+export interface EventProps {
     [PropName: string]: string
 }
 
-interface ConvertProps {
+export interface ConvertProps {
     tagName: string,
     HTMLProps: HTMLProps,
     eventProps: EventProps,
@@ -36,9 +36,9 @@ interface ConvertProps {
     children?: ReactNode,
 }
 
-type Convert = (props: ConvertProps) => JSX.Element
+export type Convert = (props: ConvertProps) => JSX.Element
 
-function getPropsFromStartTag(startTag: string) {
+export function getPropsFromStartTag(startTag: string) {
     const match = startTag.match(/<(?<tagName>[a-zA-Z]+?)[\s]{1}(?<attr>.*?)[\/]?>/)
     const HTMLProps: HTMLProps = {}
     const eventProps: EventProps = {}
@@ -94,11 +94,11 @@ function getPropsFromStartTag(startTag: string) {
     return { HTMLProps, eventProps }
 }
 
-interface Style {
+export interface Style {
     [PropName: string]: string
 }
 
-function getStylePropName(str: string) {
+export function getStylePropName(str: string) {
     str = str.trim()
     if (/[^-a-zA-Z]/.test(str) || /^-/.test(str) || /-$/.test(str)) {
         return undefined
@@ -106,7 +106,7 @@ function getStylePropName(str: string) {
     return `${str[0].toLowerCase()}${str.split("-").map(item => `${item[0].toUpperCase()}${item.slice(1).toLowerCase()}`).join("").slice(1)}`
 }
 
-function getStyle(string: string) {
+export function getStyle(string: string) {
     const style: Style = {}
     string.split(";").forEach(item => {
         if (!item.trim()) return

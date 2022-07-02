@@ -23,6 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getStyle = exports.getStylePropName = exports.getPropsFromStartTag = exports.getPropName = void 0;
 const react_1 = __importStar(require("react"));
 function getPropName(str) {
     str = str.trim();
@@ -37,6 +38,7 @@ function getPropName(str) {
     }
     return undefined;
 }
+exports.getPropName = getPropName;
 function getPropsFromStartTag(startTag) {
     const match = startTag.match(/<(?<tagName>[a-zA-Z]+?)[\s]{1}(?<attr>.*?)[\/]?>/);
     const HTMLProps = {};
@@ -93,6 +95,7 @@ function getPropsFromStartTag(startTag) {
     }
     return { HTMLProps, eventProps };
 }
+exports.getPropsFromStartTag = getPropsFromStartTag;
 function getStylePropName(str) {
     str = str.trim();
     if (/[^-a-zA-Z]/.test(str) || /^-/.test(str) || /-$/.test(str)) {
@@ -100,6 +103,7 @@ function getStylePropName(str) {
     }
     return `${str[0].toLowerCase()}${str.split("-").map(item => `${item[0].toUpperCase()}${item.slice(1).toLowerCase()}`).join("").slice(1)}`;
 }
+exports.getStylePropName = getStylePropName;
 function getStyle(string) {
     const style = {};
     string.split(";").forEach(item => {
@@ -118,6 +122,7 @@ function getStyle(string) {
     });
     return style;
 }
+exports.getStyle = getStyle;
 function HTML2JSX({ innerHTML, convert, enableScript }) {
     let str = innerHTML;
     const JSXList = [];

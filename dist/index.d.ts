@@ -1,27 +1,33 @@
 import React, { ReactNode } from "react";
-interface HTML2JSXProps {
+export interface HTML2JSXProps {
     innerHTML: string;
     convert?: Convert;
     enableScript?: boolean;
 }
-interface HTMLProps {
+export declare function getPropName(str: string): string | undefined;
+export interface HTMLProps {
     [PropName: string]: string | boolean | Style;
 }
-interface EventProps {
+export interface EventProps {
     [PropName: string]: string;
 }
-interface ConvertProps {
+export interface ConvertProps {
     tagName: string;
     HTMLProps: HTMLProps;
     eventProps: EventProps;
     originalElement: JSX.Element;
     children?: ReactNode;
 }
-declare type Convert = (props: ConvertProps) => JSX.Element;
-interface Style {
+export declare type Convert = (props: ConvertProps) => JSX.Element;
+export declare function getPropsFromStartTag(startTag: string): {
+    HTMLProps: HTMLProps;
+    eventProps: EventProps;
+};
+export interface Style {
     [PropName: string]: string;
 }
+export declare function getStylePropName(str: string): string | undefined;
+export declare function getStyle(string: string): Style;
 export default function HTML2JSX({ innerHTML, convert, enableScript }: HTML2JSXProps): React.FunctionComponentElement<{
     children?: React.ReactNode;
 }>;
-export {};
