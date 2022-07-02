@@ -23,7 +23,7 @@ npm i convert-html-to-jsx
 Pass in `innerHTML` and you're done!
 
 ```typescript
-import HTML2JSX from "covert-html-to-jsx"
+import HTML2JSX from "convert-html-to-jsx"
 
 const innerHTML = `
     <p style="font-weight: bold;">Hello, world!</p>

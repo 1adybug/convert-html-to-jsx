@@ -1,5 +1,5 @@
 {
-    "name": "covert-html-to-jsx",
+    "name": "convert-html-to-jsx",
     "version": "0.0.2",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/1adybug/covert-html-to-jsx"
+        "url": "https://github.com/1adybug/convert-html-to-jsx"
     },
     "scripts": {
         "build": "npx tsc -p ."
@@ -24,6 +24,6 @@
         "react native",
         "jsx",
         "html-to-jsx",
-        "covert-html-to-jsx"
+        "convert-html-to-jsx"
     ]
 }
