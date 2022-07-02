@@ -95,7 +95,7 @@ type Convert = (props: ConvertProps) => JSX.Element
 1. Disable all `button` tags
 
     ```typescript
-    const tranform = (props: TransformProps) => {
+    const convert = (props: TransformProps) => {
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
         if (tagName === "button") {
 
@@ -116,13 +116,13 @@ type Convert = (props: ConvertProps) => JSX.Element
         return originalElement
     }
 
-    <HTML2JSX innerHTML={innerHTML} tranform={tranform} >
+    <HTML2JSX innerHTML={innerHTML} convert={convert} >
     ```
 
 2. Bold the tag with `id` as `abc`
 
     ```typescript
-    const tranform = (props: TransformProps) => {
+    const convert = (props: TransformProps) => {
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
         if (HTMLProps.id === "abc") {
             if (HTMLProps.style) {
@@ -137,7 +137,7 @@ type Convert = (props: ConvertProps) => JSX.Element
         return originalElement
     }
 
-    <HTML2JSX innerHTML={innerHTML} tranform={tranform} >
+    <HTML2JSX innerHTML={innerHTML} convert={convert} >
     ```
 
 3. Replace tags with other components, which is useful when using other component libraries
@@ -145,7 +145,7 @@ type Convert = (props: ConvertProps) => JSX.Element
     ```typescript
     import { Image } from "antd"
 
-    const tranform = (props: TransformProps) => {
+    const convert = (props: TransformProps) => {
 
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
 
@@ -170,7 +170,7 @@ type Convert = (props: ConvertProps) => JSX.Element
     ```typescript
     import { Text } from "react-native"
 
-    const tranform = (props: TransformProps) => {
+    const convert = (props: TransformProps) => {
 
         const { tagName, HTMLProps, eventProps, originalElement, children } = props
 
