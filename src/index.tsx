@@ -32,7 +32,7 @@ export interface ConvertProps {
     tagName: string
     HTMLProps: HTMLProps
     eventProps: EventProps
-    originalElement: ReactNode
+    originalElement: JSX.Element
     children?: ReactNode
 }
 
@@ -172,7 +172,7 @@ export default function HTML2JSX({
             const tagName = matchTag.groups!.tagName
             const { HTMLProps, eventProps } = getPropsFromStartTag(startTag)
             const index = matchTag.index!
-            const originalTextElement = str.slice(0, index)
+            const originalTextElement = <>{str.slice(0, index)}</>
             if (convert) {
                 JSXList.push(
                     createElement(
@@ -187,7 +187,7 @@ export default function HTML2JSX({
                     )
                 )
             } else {
-                JSXList.push(originalTextElement)
+                JSXList.push(str.slice(0, index))
             }
             if (!startTag.endsWith("/>")) {
                 const endIndex = str.indexOf(`</${tagName}>`)
@@ -247,7 +247,22 @@ export default function HTML2JSX({
             str = str.slice(index + startTag.length)
             continue
         }
-        JSXList.push(str)
+        if (convert) {
+            JSXList.push(
+                createElement(
+                    convert,
+                    {
+                        HTMLProps: {},
+                        eventProps: {},
+                        tagName: "",
+                        originalElement: <>{str}</>,
+                    },
+                    str
+                )
+            )
+        } else {
+            JSXList.push(str)
+        }
         break
     }
     return createElement(Fragment, {}, ...JSXList)

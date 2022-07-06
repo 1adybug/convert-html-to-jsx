@@ -149,7 +149,7 @@ function HTML2JSX({ innerHTML, convert, enableScript, }) {
             const tagName = matchTag.groups.tagName;
             const { HTMLProps, eventProps } = getPropsFromStartTag(startTag);
             const index = matchTag.index;
-            const originalTextElement = str.slice(0, index);
+            const originalTextElement = react_1.default.createElement(react_1.default.Fragment, null, str.slice(0, index));
             if (convert) {
                 JSXList.push((0, react_1.createElement)(convert, {
                     HTMLProps,
@@ -159,7 +159,7 @@ function HTML2JSX({ innerHTML, convert, enableScript, }) {
                 }, str.slice(0, index)));
             }
             else {
-                JSXList.push(originalTextElement);
+                JSXList.push(str.slice(0, index));
             }
             if (!startTag.endsWith("/>")) {
                 const endIndex = str.indexOf(`</${tagName}>`);
@@ -199,7 +199,17 @@ function HTML2JSX({ innerHTML, convert, enableScript, }) {
             str = str.slice(index + startTag.length);
             continue;
         }
-        JSXList.push(str);
+        if (convert) {
+            JSXList.push((0, react_1.createElement)(convert, {
+                HTMLProps: {},
+                eventProps: {},
+                tagName: "",
+                originalElement: react_1.default.createElement(react_1.default.Fragment, null, str),
+            }, str));
+        }
+        else {
+            JSXList.push(str);
+        }
         break;
     }
     return (0, react_1.createElement)(react_1.Fragment, {}, ...JSXList);

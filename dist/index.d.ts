@@ -15,7 +15,7 @@ export interface ConvertProps {
     tagName: string;
     HTMLProps: HTMLProps;
     eventProps: EventProps;
-    originalElement: ReactNode;
+    originalElement: JSX.Element;
     children?: ReactNode;
 }
 export declare type Convert = (props: ConvertProps) => JSX.Element;
