@@ -15,7 +15,7 @@ export interface ConvertProps {
     tagName: string;
     HTMLProps: HTMLProps;
     eventProps: EventProps;
-    originalElement: JSX.Element;
+    originalElement: ReactNode;
     children?: ReactNode;
 }
 export declare type Convert = (props: ConvertProps) => JSX.Element;
@@ -28,6 +28,6 @@ export interface Style {
 }
 export declare function getStylePropName(str: string): string | undefined;
 export declare function getStyle(string: string): Style;
-export default function HTML2JSX({ innerHTML, convert, enableScript }: HTML2JSXProps): React.FunctionComponentElement<{
+export default function HTML2JSX({ innerHTML, convert, enableScript, }: HTML2JSXProps): React.FunctionComponentElement<{
     children?: React.ReactNode;
 }>;

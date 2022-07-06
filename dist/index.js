@@ -49,7 +49,11 @@ function getPropsFromStartTag(startTag) {
             const matchAttr1 = attr.match(/=[\s]*?"(?<property>.*?)"/);
             const matchAttr2 = attr.match(/=[\s]*?'(?<property>.*?)'/);
             if (matchAttr1 || matchAttr2) {
-                const match = ((matchAttr1 && matchAttr2) ? (matchAttr1.index < matchAttr2.index ? matchAttr1 : matchAttr2) : (matchAttr1 || matchAttr2));
+                const match = (matchAttr1 && matchAttr2
+                    ? matchAttr1.index < matchAttr2.index
+                        ? matchAttr1
+                        : matchAttr2
+                    : matchAttr1 || matchAttr2);
                 const leftString = attr.slice(0, match.index);
                 const arr = leftString.split(/[\s]+/).filter(item => item);
                 if (!arr.length) {
@@ -78,7 +82,9 @@ function getPropsFromStartTag(startTag) {
                 attr = attr.slice(match.index + match[0].length);
                 continue;
             }
-            attr.split(/[\s]+/).filter(item => item).forEach(item => {
+            attr.split(/[\s]+/)
+                .filter(item => item)
+                .forEach(item => {
                 const propName = getPropName(item);
                 if (!propName) {
                     throw new Error(`"${item}" is an illegal attribute name in ${startTag}`);
@@ -101,7 +107,11 @@ function getStylePropName(str) {
     if (/[^-a-zA-Z]/.test(str) || /^-/.test(str) || /-$/.test(str)) {
         return undefined;
     }
-    return `${str[0].toLowerCase()}${str.split("-").map(item => `${item[0].toUpperCase()}${item.slice(1).toLowerCase()}`).join("").slice(1)}`;
+    return `${str[0].toLowerCase()}${str
+        .split("-")
+        .map(item => `${item[0].toUpperCase()}${item.slice(1).toLowerCase()}`)
+        .join("")
+        .slice(1)}`;
 }
 exports.getStylePropName = getStylePropName;
 function getStyle(string) {
@@ -123,21 +133,30 @@ function getStyle(string) {
     return style;
 }
 exports.getStyle = getStyle;
-function HTML2JSX({ innerHTML, convert, enableScript }) {
+function HTML2JSX({ innerHTML, convert, enableScript, }) {
     let str = innerHTML;
     const JSXList = [];
     for (;;) {
         const matchTag1 = str.match(/<(?<tagName>[a-zA-Z]+?)[\/]?>/);
         const matchTag2 = str.match(/<(?<tagName>[a-zA-Z]+?)[\s]{1}(?<attr>.*?)[\/]?>/);
         if (matchTag1 || matchTag2) {
-            const matchTag = ((matchTag1 && matchTag2) ? (matchTag1.index < matchTag2.index ? matchTag1 : matchTag2) : (matchTag1 || matchTag2));
+            const matchTag = (matchTag1 && matchTag2
+                ? matchTag1.index < matchTag2.index
+                    ? matchTag1
+                    : matchTag2
+                : matchTag1 || matchTag2);
             const startTag = matchTag[0];
             const tagName = matchTag.groups.tagName;
             const { HTMLProps, eventProps } = getPropsFromStartTag(startTag);
             const index = matchTag.index;
-            const originalTextElement = react_1.default.createElement(react_1.default.Fragment, null, str.slice(0, index));
+            const originalTextElement = str.slice(0, index);
             if (convert) {
-                JSXList.push((0, react_1.createElement)(convert, { HTMLProps, eventProps, tagName: "", originalElement: originalTextElement }, str.slice(0, index)));
+                JSXList.push((0, react_1.createElement)(convert, {
+                    HTMLProps,
+                    eventProps,
+                    tagName: "",
+                    originalElement: originalTextElement,
+                }, str.slice(0, index)));
             }
             else {
                 JSXList.push(originalTextElement);
@@ -148,20 +167,30 @@ function HTML2JSX({ innerHTML, convert, enableScript }) {
                     if (tagName.toLowerCase() !== "script" || enableScript) {
                         const originalTagElement = (0, react_1.createElement)(tagName, HTMLProps, react_1.default.createElement(HTML2JSX, { innerHTML: str.slice(index + startTag.length, endIndex) }));
                         if (convert) {
-                            JSXList.push((0, react_1.createElement)(convert, { HTMLProps, eventProps, tagName, originalElement: originalTagElement }, react_1.default.createElement(HTML2JSX, { innerHTML: str.slice(index + startTag.length, endIndex) })));
+                            JSXList.push((0, react_1.createElement)(convert, {
+                                HTMLProps,
+                                eventProps,
+                                tagName,
+                                originalElement: originalTagElement,
+                            }, react_1.default.createElement(HTML2JSX, { innerHTML: str.slice(index + startTag.length, endIndex) })));
                         }
                         else {
                             JSXList.push(originalTagElement);
                         }
                     }
-                    str = str.slice(endIndex + (`</${tagName}>`).length);
+                    str = str.slice(endIndex + `</${tagName}>`.length);
                     continue;
                 }
             }
             if (tagName.toLowerCase() !== "script" || enableScript) {
                 const originalTagElement = (0, react_1.createElement)(tagName, HTMLProps);
                 if (convert) {
-                    JSXList.push((0, react_1.createElement)(convert, { HTMLProps, eventProps, tagName: tagName, originalElement: originalTagElement }));
+                    JSXList.push((0, react_1.createElement)(convert, {
+                        HTMLProps,
+                        eventProps,
+                        tagName: tagName,
+                        originalElement: originalTagElement,
+                    }));
                 }
                 else {
                     JSXList.push(originalTagElement);
@@ -170,10 +199,10 @@ function HTML2JSX({ innerHTML, convert, enableScript }) {
             str = str.slice(index + startTag.length);
             continue;
         }
-        JSXList.push(react_1.default.createElement(react_1.default.Fragment, null, str));
+        JSXList.push(str);
         break;
     }
-    return ((0, react_1.createElement)(react_1.Fragment, {}, ...JSXList));
+    return (0, react_1.createElement)(react_1.Fragment, {}, ...JSXList);
 }
 exports.default = HTML2JSX;
 //# sourceMappingURL=index.js.map
