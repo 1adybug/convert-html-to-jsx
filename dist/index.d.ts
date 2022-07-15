@@ -3,8 +3,10 @@ export interface HTML2JSXProps {
     innerHTML: string;
     convert?: Convert;
     enableScript?: boolean;
+    propErrorHandler?: PropErrorHandler;
+    styleErrorHandler?: StyleErrorHandler;
 }
-export declare function getPropName(str: string): string;
+export declare function getPropName(str: string): string | undefined;
 export interface HTMLProps {
     [PropName: string]: string | boolean | Style;
 }
@@ -19,15 +21,27 @@ export interface ConvertProps {
     children?: ReactNode;
 }
 export declare type Convert = (props: ConvertProps) => JSX.Element;
-export declare function getPropsFromStartTag(startTag: string): {
+interface GetPropsFromStartTagParams {
+    startTag: string;
+    propErrorHandler?: PropErrorHandler;
+    styleErrorHandler?: StyleErrorHandler;
+}
+export declare function getPropsFromStartTag({ startTag, propErrorHandler, styleErrorHandler, }: GetPropsFromStartTagParams): {
     HTMLProps: HTMLProps;
     eventProps: EventProps;
 };
 export interface Style {
     [PropName: string]: string;
 }
+interface GetStyleParams {
+    string: string;
+    styleErrorHandler?: StyleErrorHandler;
+}
 export declare function getStylePropName(str: string): string | undefined;
-export declare function getStyle(string: string): Style;
-export default function HTML2JSX({ innerHTML, convert, enableScript, }: HTML2JSXProps): React.FunctionComponentElement<{
+export declare function getStyle({ string, styleErrorHandler }: GetStyleParams): Style;
+export declare type PropErrorHandler = (propName: string) => string | undefined;
+export declare type StyleErrorHandler = (styleName: string) => string | undefined;
+export default function HTML2JSX({ innerHTML, convert, enableScript, propErrorHandler, styleErrorHandler, }: HTML2JSXProps): React.FunctionComponentElement<{
     children?: React.ReactNode;
 }>;
+export {};

@@ -30,16 +30,16 @@ function getPropName(str) {
     if (str === "class") {
         return "className";
     }
-    // if (/^[a-zA-Z]+$/.test(str) || /^data-[\w]+$/i.test(str)) {
-    if (str.startsWith("on")) {
-        return `on${str[2].toUpperCase()}${str.slice(3)}`;
+    if (/^[a-zA-Z]+$/.test(str) || /^data-[\w]+$/i.test(str)) {
+        if (str.startsWith("on")) {
+            return `on${str[2].toUpperCase()}${str.slice(3)}`;
+        }
+        return str;
     }
-    return str;
-    // }
-    // return undefined
+    return undefined;
 }
 exports.getPropName = getPropName;
-function getPropsFromStartTag(startTag) {
+function getPropsFromStartTag({ startTag, propErrorHandler, styleErrorHandler, }) {
     const match = startTag.match(/<(?<tagName>[a-zA-Z]+?)[\s]{1}(?<attr>.*?)[\/]?>/);
     const HTMLProps = {};
     const eventProps = {};
@@ -60,24 +60,36 @@ function getPropsFromStartTag(startTag) {
                     throw new Error(`"${match[0]}" has no attribute name in ${startTag}`);
                 }
                 arr.slice(0, -1).forEach(item => {
-                    const propName = getPropName(item);
+                    let propName = getPropName(item);
                     if (!propName) {
-                        throw new Error(`"${item}" is an illegal attribute name in ${startTag}`);
+                        if (propErrorHandler) {
+                            propName = propErrorHandler(item.trim());
+                        }
+                        else {
+                            console.warn(`"${item}" is an illegal attribute name in ${startTag}`);
+                        }
                     }
-                    if (!propName.startsWith("on")) {
+                    if (propName && !propName.startsWith("on")) {
                         HTMLProps[propName] = true;
                     }
                 });
                 const op = arr.slice(-1)[0];
-                const propName = getPropName(op);
+                let propName = getPropName(op);
                 if (!propName) {
-                    throw new Error(`"${op}" is an illegal attribute name in ${startTag}`);
+                    if (propErrorHandler) {
+                        propName = propErrorHandler(op.trim());
+                    }
+                    else {
+                        console.warn(`"${op}" is an illegal attribute name in ${startTag}`);
+                    }
                 }
-                if (!propName.startsWith("on")) {
-                    HTMLProps[propName] = match.groups.property;
-                }
-                else {
-                    eventProps[propName] = match.groups.property;
+                if (propName) {
+                    if (!propName.startsWith("on")) {
+                        HTMLProps[propName] = match.groups.property;
+                    }
+                    else {
+                        eventProps[propName] = match.groups.property;
+                    }
                 }
                 attr = attr.slice(match.index + match[0].length);
                 continue;
@@ -85,11 +97,16 @@ function getPropsFromStartTag(startTag) {
             attr.split(/[\s]+/)
                 .filter(item => item)
                 .forEach(item => {
-                const propName = getPropName(item);
+                let propName = getPropName(item);
                 if (!propName) {
-                    throw new Error(`"${item}" is an illegal attribute name in ${startTag}`);
+                    if (propErrorHandler) {
+                        propName = propErrorHandler(item.trim());
+                    }
+                    else {
+                        console.warn(`"${item}" is an illegal attribute name in ${startTag}`);
+                    }
                 }
-                if (!propName.startsWith("on")) {
+                if (propName && !propName.startsWith("on")) {
                     HTMLProps[propName] = true;
                 }
             });
@@ -97,7 +114,10 @@ function getPropsFromStartTag(startTag) {
         }
     }
     if (HTMLProps.style) {
-        HTMLProps.style = getStyle(HTMLProps.style);
+        HTMLProps.style = getStyle({
+            string: HTMLProps.style,
+            styleErrorHandler,
+        });
     }
     return { HTMLProps, eventProps };
 }
@@ -114,7 +134,7 @@ function getStylePropName(str) {
         .slice(1)}`;
 }
 exports.getStylePropName = getStylePropName;
-function getStyle(string) {
+function getStyle({ string, styleErrorHandler }) {
     const style = {};
     string.split(";").forEach(item => {
         if (!item.trim())
@@ -125,15 +145,27 @@ function getStyle(string) {
         }
         const op = item.slice(0, index);
         const prop = getStylePropName(op);
+        const value = item.slice(index + 1).trim();
         if (!prop) {
-            throw new Error(`"${op}" is an illegal style property name in ${string}`);
+            if (styleErrorHandler) {
+                const _prop = styleErrorHandler(op.trim());
+                if (_prop) {
+                    style[_prop] = value;
+                }
+            }
+            else {
+                console.warn(`"${op}" is an illegal style property name in ${string}
+                    u can use \`styleErrorHandler\` to handle it`);
+            }
         }
-        style[prop] = item.slice(index + 1).trim();
+        else {
+            style[prop] = value;
+        }
     });
     return style;
 }
 exports.getStyle = getStyle;
-function HTML2JSX({ innerHTML, convert, enableScript, }) {
+function HTML2JSX({ innerHTML, convert, enableScript, propErrorHandler, styleErrorHandler, }) {
     let str = innerHTML;
     const JSXList = [];
     while (true) {
@@ -147,7 +179,11 @@ function HTML2JSX({ innerHTML, convert, enableScript, }) {
                 : matchTag1 || matchTag2);
             const startTag = matchTag[0];
             const tagName = matchTag.groups.tagName;
-            const { HTMLProps, eventProps } = getPropsFromStartTag(startTag);
+            const { HTMLProps, eventProps } = getPropsFromStartTag({
+                startTag,
+                propErrorHandler,
+                styleErrorHandler,
+            });
             const index = matchTag.index;
             const originalTextElement = react_1.default.createElement(react_1.default.Fragment, null, str.slice(0, index));
             if (convert) {
