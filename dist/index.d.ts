@@ -4,7 +4,7 @@ export interface HTML2JSXProps {
     convert?: Convert;
     enableScript?: boolean;
 }
-export declare function getPropName(str: string): string | undefined;
+export declare function getPropName(str: string): string;
 export interface HTMLProps {
     [PropName: string]: string | boolean | Style;
 }

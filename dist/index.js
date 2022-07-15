@@ -30,13 +30,13 @@ function getPropName(str) {
     if (str === "class") {
         return "className";
     }
-    if (/^[a-zA-Z]+$/.test(str) || /^data-[\w]+$/i.test(str)) {
-        if (str.startsWith("on")) {
-            return `on${str[2].toUpperCase()}${str.slice(3)}`;
-        }
-        return str;
+    // if (/^[a-zA-Z]+$/.test(str) || /^data-[\w]+$/i.test(str)) {
+    if (str.startsWith("on")) {
+        return `on${str[2].toUpperCase()}${str.slice(3)}`;
     }
-    return undefined;
+    return str;
+    // }
+    // return undefined
 }
 exports.getPropName = getPropName;
 function getPropsFromStartTag(startTag) {
@@ -45,7 +45,7 @@ function getPropsFromStartTag(startTag) {
     const eventProps = {};
     if (match && match.groups && match.groups.attr) {
         let attr = match.groups.attr;
-        for (;;) {
+        while (true) {
             const matchAttr1 = attr.match(/=[\s]*?"(?<property>.*?)"/);
             const matchAttr2 = attr.match(/=[\s]*?'(?<property>.*?)'/);
             if (matchAttr1 || matchAttr2) {
@@ -136,7 +136,7 @@ exports.getStyle = getStyle;
 function HTML2JSX({ innerHTML, convert, enableScript, }) {
     let str = innerHTML;
     const JSXList = [];
-    for (;;) {
+    while (true) {
         const matchTag1 = str.match(/<(?<tagName>[a-zA-Z]+?)[\/]?>/);
         const matchTag2 = str.match(/<(?<tagName>[a-zA-Z]+?)[\s]{1}(?<attr>.*?)[\/]?>/);
         if (matchTag1 || matchTag2) {
