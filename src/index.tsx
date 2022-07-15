@@ -83,7 +83,7 @@ export function getPropsFromStartTag({
                             propName = propErrorHandler(item.trim())
                         } else {
                             console.warn(
-                                `"${item}" is an illegal attribute name in ${startTag}`
+                                `"${item}" is an illegal attribute name in ${startTag}, u can use \`propErrorHandler\` to handle it, such as <HTML2JSX propErrorHandler={getANewPropName} />`
                             )
                         }
                     }
@@ -98,7 +98,7 @@ export function getPropsFromStartTag({
                         propName = propErrorHandler(op.trim())
                     } else {
                         console.warn(
-                            `"${op}" is an illegal attribute name in ${startTag}`
+                            `"${op}" is an illegal attribute name in ${startTag}, u can use \`propErrorHandler\` to handle it, such as <HTML2JSX propErrorHandler={getANewPropName} />`
                         )
                     }
                 }
@@ -121,7 +121,7 @@ export function getPropsFromStartTag({
                             propName = propErrorHandler(item.trim())
                         } else {
                             console.warn(
-                                `"${item}" is an illegal attribute name in ${startTag}`
+                                `"${item}" is an illegal attribute name in ${startTag}, u can use \`propErrorHandler\` to handle it, such as <HTML2JSX propErrorHandler={getANewPropName} />`
                             )
                         }
                     }
@@ -170,19 +170,18 @@ export function getStyle({ string, styleErrorHandler }: GetStyleParams) {
         if (index < 0) {
             throw new Error(`"${item}" is an illegal CSS property in ${string}`)
         }
-        const op = item.slice(0, index)
+        const op = item.slice(0, index).trim()
         const prop = getStylePropName(op)
         const value = item.slice(index + 1).trim()
         if (!prop) {
             if (styleErrorHandler) {
-                const _prop = styleErrorHandler(op.trim())
+                const _prop = styleErrorHandler(op)
                 if (_prop) {
                     style[_prop] = value
                 }
             } else {
                 console.warn(
-                    `"${op}" is an illegal style property name in ${string}
-                    u can use \`styleErrorHandler\` to handle it`
+                    `"${op}" is an illegal style property name in \`${string}\`, u can use \`styleErrorHandler\` to handle it, such as <HTML2JSX styleErrorHandler={getANewStyleName} />`
                 )
             }
         } else {
